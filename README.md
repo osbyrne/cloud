@@ -74,8 +74,6 @@ npm start
 ```
 Le serveur Express assemblé écoutera sur le port `3000` et servira les fichiers statiques de React depuis le dossier `frontend/dist`.
 
----
-
 ## Création de l'image Docker
 
 L'application est configurée avec un `Dockerfile` multi-stage pour garantir une image finale minimale et sécurisée en production.
@@ -97,8 +95,6 @@ eval $(minikube docker-env)
 docker build -t contact-manager:latest .
 ```
 
----
-
 ## Déploiement sur Kubernetes
 
 Les fichiers de configuration se trouvent dans le dossier [k8s/](file:///Users/osbyrne/cloud/k8s).
@@ -116,8 +112,6 @@ Vérifiez que les pods fonctionnent correctement :
 kubectl get pods -w
 ```
 *(Attendez que le statut de tous les pods passe à `Running`)*.
-
----
 
 ## Accès via la Gateway (Ingress ou Gateway API)
 
@@ -167,8 +161,6 @@ Si votre cluster utilise la nouvelle spécification **Gateway API** (avec un con
 
 3. **Accéder à l'application** :
    Récupérez l'adresse IP externe de la Gateway et accédez-y dans votre navigateur.
-
----
 
 ## Commandes de Diagnostic et de Test
 
