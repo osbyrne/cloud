@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-manager
+  namespace: default
+  labels:
+    app: contact-manager
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: contact-manager
+  template:
+    metadata:
+      labels:
+        app: contact-manager
+    spec:
+      containers:
+      - name: contact-manager
+        image: contact-manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
