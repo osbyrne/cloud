@@ -9,14 +9,17 @@ COPY frontend/package*.json ./frontend/
 
 # Install dependencies for both backend and frontend
 RUN npm ci
-RUN npm ci --prefix frontend
+RUN npm --prefix frontend install
 
 # Copy all source files
 COPY src ./src
 COPY frontend ./frontend
 
-# Build both frontend and backend
-RUN npm run build
+# Build backend (TypeScript compilation)
+RUN npx tsc
+
+# Build frontend (Vite)
+RUN npm --prefix frontend run build
 
 # Stage 2: Production Runtime
 FROM node:20-alpine AS runner

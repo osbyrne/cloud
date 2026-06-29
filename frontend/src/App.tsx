@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import { 
-  Users, 
-  User, 
-  Mail, 
-  Phone, 
-  Briefcase, 
-  FileText, 
-  Search, 
-  Plus, 
-  X, 
-  Trash2, 
-  Edit3, 
-  Loader2, 
-  CheckCircle2, 
-  AlertCircle 
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Users,
+  User,
+  Mail,
+  Phone,
+  Briefcase,
+  FileText,
+  Search,
+  X,
+  Trash2,
+  Edit3,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
 interface Contact {
   id: string;
@@ -29,32 +28,32 @@ interface Contact {
 interface Toast {
   id: string;
   message: string;
-  type: 'success' | 'error';
+  type: "success" | "error";
 }
 
 const AVATAR_GRADIENTS = [
-  'from-indigo-500 to-purple-600',
-  'from-blue-500 to-cyan-500',
-  'from-emerald-500 to-teal-600',
-  'from-amber-500 to-red-500',
-  'from-pink-500 to-rose-500',
-  'from-lime-500 to-emerald-600'
+  "from-indigo-500 to-purple-600",
+  "from-blue-500 to-cyan-500",
+  "from-emerald-500 to-teal-600",
+  "from-amber-500 to-red-500",
+  "from-pink-500 to-rose-500",
+  "from-lime-500 to-emerald-600",
 ];
 
 export default function App() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [toasts, setToasts] = useState<Toast[]>([]);
-  
+
   // Form state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    notes: ''
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    notes: "",
   });
 
   // Fetch contacts on load
@@ -65,38 +64,38 @@ export default function App() {
   const fetchContacts = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/contacts');
-      if (!res.ok) throw new Error('Impossible de charger les contacts');
+      const res = await fetch("/api/contacts");
+      if (!res.ok) throw new Error("Impossible de charger les contacts");
       const data = await res.json();
       setContacts(data);
     } catch (err: any) {
-      showToast(err.message || 'Erreur de chargement', 'error');
+      showToast(err.message || "Erreur de chargement", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (message: string, type: "success" | "error" = "success") => {
     const id = Math.random().toString(36).substring(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
-    
+    setToasts((prev) => [...prev, { id, message, type }]);
+
     // Auto-remove toast after 4 seconds
     setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
+      setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
-    const key = id.replace('contact-', '');
-    setFormData(prev => ({ ...prev, [key]: value }));
+    const key = id.replace("contact-", "");
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      showToast('Les champs obligatoires (*) doivent être remplis', 'error');
+      showToast("Les champs obligatoires (*) doivent être remplis", "error");
       return;
     }
 
@@ -104,32 +103,32 @@ export default function App() {
       if (editingId) {
         // Edit Mode
         const res = await fetch(`/api/contacts/${editingId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         });
 
-        if (!res.ok) throw new Error('Erreur lors de la modification');
+        if (!res.ok) throw new Error("Erreur lors de la modification");
         const updated = await res.json();
-        setContacts(prev => prev.map(c => c.id === editingId ? updated : c));
-        showToast('Contact mis à jour avec succès !');
+        setContacts((prev) => prev.map((c) => (c.id === editingId ? updated : c)));
+        showToast("Contact mis à jour avec succès !");
       } else {
         // Create Mode
-        const res = await fetch('/api/contacts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+        const res = await fetch("/api/contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         });
 
-        if (!res.ok) throw new Error('Erreur lors de la création');
+        if (!res.ok) throw new Error("Erreur lors de la création");
         const created = await res.json();
-        setContacts(prev => [...prev, created]);
-        showToast('Contact ajouté avec succès !');
+        setContacts((prev) => [...prev, created]);
+        showToast("Contact ajouté avec succès !");
       }
-      
+
       resetForm();
     } catch (err: any) {
-      showToast(err.message || 'Une erreur est survenue', 'error');
+      showToast(err.message || "Une erreur est survenue", "error");
     }
   };
 
@@ -139,37 +138,37 @@ export default function App() {
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
-      company: contact.company || '',
-      notes: contact.notes || ''
+      company: contact.company || "",
+      notes: contact.notes || "",
     });
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) return;
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce contact ?")) return;
 
     try {
-      const res = await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Erreur lors de la suppression');
-      
-      setContacts(prev => prev.filter(c => c.id !== id));
-      showToast('Contact supprimé avec succès');
-      
+      const res = await fetch(`/api/contacts/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Erreur lors de la suppression");
+
+      setContacts((prev) => prev.filter((c) => c.id !== id));
+      showToast("Contact supprimé avec succès");
+
       if (editingId === id) {
         resetForm();
       }
     } catch (err: any) {
-      showToast(err.message || 'Une erreur est survenue', 'error');
+      showToast(err.message || "Une erreur est survenue", "error");
     }
   };
 
   const resetForm = () => {
     setEditingId(null);
     setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      notes: ''
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      notes: "",
     });
   };
 
@@ -184,19 +183,20 @@ export default function App() {
   };
 
   const getInitials = (name: string) => {
-    if (!name) return 'C';
-    const parts = name.trim().split(' ');
+    if (!name) return "C";
+    const parts = name.trim().split(" ");
     if (parts.length >= 2) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
     return parts[0].substring(0, 2).toUpperCase();
   };
 
-  const filteredContacts = contacts.filter(c => 
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (c.company && c.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    c.phone.includes(searchQuery)
+  const filteredContacts = contacts.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.company && c.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      c.phone.includes(searchQuery),
   );
 
   return (
@@ -209,7 +209,10 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-indigo-100 bg-clip-text text-transparent">
-              Contact<span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Sphere</span>
+              Contact
+              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                Sphere
+              </span>
             </h1>
             <p className="text-xs text-[#9ca3af]">Propulsé par React + Tailwind v4</p>
           </div>
@@ -217,7 +220,9 @@ export default function App() {
 
         <div className="flex items-center gap-6 self-stretch sm:self-auto justify-between">
           <div className="flex flex-col items-end">
-            <span className="text-[10px] uppercase text-[#9ca3af] tracking-wider">Total Contacts</span>
+            <span className="text-[10px] uppercase text-[#9ca3af] tracking-wider">
+              Total Contacts
+            </span>
             <span className="text-2xl font-bold text-white">{contacts.length}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-semibold text-emerald-400">
@@ -232,7 +237,7 @@ export default function App() {
         {/* Form Card */}
         <section className="bg-brand-glass backdrop-blur-lg border border-border-glass rounded-2xl p-6 shadow-2xl">
           <h2 className="text-lg font-bold text-white mb-1">
-            {editingId ? 'Modifier le Contact' : 'Créer un Contact'}
+            {editingId ? "Modifier le Contact" : "Créer un Contact"}
           </h2>
           <p className="text-xs text-[#9ca3af] mb-6">
             Renseignez les détails du contact ci-dessous.
@@ -240,15 +245,17 @@ export default function App() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-name" className="text-xs font-semibold text-[#9ca3af]">Nom complet *</label>
+              <label htmlFor="contact-name" className="text-xs font-semibold text-[#9ca3af]">
+                Nom complet *
+              </label>
               <div className="relative flex items-center">
                 <User size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
-                <input 
-                  type="text" 
-                  id="contact-name" 
+                <input
+                  type="text"
+                  id="contact-name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="ex. Jean Dupont" 
+                  placeholder="ex. Jean Dupont"
                   required
                   className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
                 />
@@ -256,15 +263,17 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-email" className="text-xs font-semibold text-[#9ca3af]">Adresse e-mail *</label>
+              <label htmlFor="contact-email" className="text-xs font-semibold text-[#9ca3af]">
+                Adresse e-mail *
+              </label>
               <div className="relative flex items-center">
                 <Mail size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
-                <input 
-                  type="email" 
-                  id="contact-email" 
+                <input
+                  type="email"
+                  id="contact-email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="ex. jean.dupont@company.com" 
+                  placeholder="ex. jean.dupont@company.com"
                   required
                   className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
                 />
@@ -272,15 +281,17 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-phone" className="text-xs font-semibold text-[#9ca3af]">Téléphone *</label>
+              <label htmlFor="contact-phone" className="text-xs font-semibold text-[#9ca3af]">
+                Téléphone *
+              </label>
               <div className="relative flex items-center">
                 <Phone size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
-                <input 
-                  type="tel" 
-                  id="contact-phone" 
+                <input
+                  type="tel"
+                  id="contact-phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  placeholder="ex. +33 6 12 34 56 78" 
+                  placeholder="ex. +33 6 12 34 56 78"
                   required
                   className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
                 />
@@ -288,45 +299,55 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-company" className="text-xs font-semibold text-[#9ca3af]">Entreprise</label>
+              <label htmlFor="contact-company" className="text-xs font-semibold text-[#9ca3af]">
+                Entreprise
+              </label>
               <div className="relative flex items-center">
-                <Briefcase size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
-                <input 
-                  type="text" 
-                  id="contact-company" 
+                <Briefcase
+                  size={16}
+                  className="absolute left-3.5 text-[#6b7280] pointer-events-none"
+                />
+                <input
+                  type="text"
+                  id="contact-company"
                   value={formData.company}
                   onChange={handleInputChange}
-                  placeholder="ex. Acme Corp" 
+                  placeholder="ex. Acme Corp"
                   className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-notes" className="text-xs font-semibold text-[#9ca3af]">Notes / Observations</label>
+              <label htmlFor="contact-notes" className="text-xs font-semibold text-[#9ca3af]">
+                Notes / Observations
+              </label>
               <div className="relative flex items-start">
-                <FileText size={16} className="absolute left-3.5 top-3 text-[#6b7280] pointer-events-none" />
-                <textarea 
-                  id="contact-notes" 
+                <FileText
+                  size={16}
+                  className="absolute left-3.5 top-3 text-[#6b7280] pointer-events-none"
+                />
+                <textarea
+                  id="contact-notes"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  rows={3} 
-                  placeholder="Notes supplémentaires sur ce contact..." 
+                  rows={3}
+                  placeholder="Notes supplémentaires sur ce contact..."
                   className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300 resize-y"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 mt-4">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/45"
               >
-                {editingId ? 'Mettre à jour' : 'Enregistrer'}
+                {editingId ? "Mettre à jour" : "Enregistrer"}
               </button>
               {editingId && (
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={resetForm}
                   className="flex items-center justify-center p-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-300"
                 >
@@ -343,11 +364,11 @@ export default function App() {
           <div className="bg-brand-glass backdrop-blur-md border border-border-glass rounded-2xl p-4 shadow-2xl">
             <div className="relative flex items-center">
               <Search size={18} className="absolute left-4 text-[#6b7280]" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un contact par son nom, e-mail ou entreprise..." 
+                placeholder="Rechercher un contact par son nom, e-mail ou entreprise..."
                 className="w-full pl-11 pr-4 py-2.5 bg-black/15 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/20 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
               />
             </div>
@@ -369,21 +390,26 @@ export default function App() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredContacts.map(contact => {
+              {filteredContacts.map((contact) => {
                 const gradient = getAvatarGradient(contact.name);
                 const initials = getInitials(contact.name);
-                
+
                 return (
-                  <div 
-                    key={contact.id} 
+                  <div
+                    key={contact.id}
                     className="group bg-brand-glass backdrop-blur-md border border-border-glass rounded-2xl p-5 flex flex-col gap-4 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-white/15 transition-all duration-300 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-gradient-to-b before:from-indigo-500 before:to-purple-500 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg text-white shadow-md bg-gradient-to-br ${gradient}`}>
+                      <div
+                        className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg text-white shadow-md bg-gradient-to-br ${gradient}`}
+                      >
                         {initials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-white truncate text-sm" title={contact.name}>
+                        <h3
+                          className="font-semibold text-white truncate text-sm"
+                          title={contact.name}
+                        >
                           {contact.name}
                         </h3>
                         {contact.company && (
@@ -397,7 +423,9 @@ export default function App() {
                     <div className="flex flex-col gap-2 pt-3 border-t border-white/5 text-xs">
                       <div className="flex items-center gap-2 text-[#9ca3af] min-w-0">
                         <Mail size={12} className="text-[#6b7280] shrink-0" />
-                        <span className="truncate" title={contact.email}>{contact.email}</span>
+                        <span className="truncate" title={contact.email}>
+                          {contact.email}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-[#9ca3af] min-w-0">
                         <Phone size={12} className="text-[#6b7280] shrink-0" />
@@ -411,14 +439,14 @@ export default function App() {
                     </div>
 
                     <div className="flex justify-end gap-2 pt-3 mt-auto border-t border-white/5">
-                      <button 
+                      <button
                         onClick={() => handleEdit(contact)}
                         className="p-1.5 rounded-lg text-[#6b7280] hover:text-indigo-400 hover:bg-white/5 transition-all duration-300 cursor-pointer"
                         title="Modifier"
                       >
                         <Edit3 size={14} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDelete(contact.id)}
                         className="p-1.5 rounded-lg text-[#6b7280] hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 cursor-pointer"
                         title="Supprimer"
@@ -436,14 +464,16 @@ export default function App() {
 
       {/* Toast System */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-50">
-        {toasts.map(toast => (
-          <div 
+        {toasts.map((toast) => (
+          <div
             key={toast.id}
             className={`flex items-center gap-3 px-4 py-3 bg-[#111827] text-white rounded-xl shadow-2xl border border-white/10 text-sm animate-slide-in ${
-              toast.type === 'success' ? 'border-l-4 border-l-emerald-500' : 'border-l-4 border-l-red-500'
+              toast.type === "success"
+                ? "border-l-4 border-l-emerald-500"
+                : "border-l-4 border-l-red-500"
             }`}
           >
-            {toast.type === 'success' ? (
+            {toast.type === "success" ? (
               <CheckCircle2 size={18} className="text-emerald-400" />
             ) : (
               <AlertCircle size={18} className="text-red-400" />
