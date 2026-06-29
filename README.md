@@ -1,6 +1,6 @@
 # ContactSphere — Application de Gestion de Contacts avec React, Tailwind et Kubernetes
 
-ContactSphere est une application moderne et élégante pour gérer ses contacts, écrite avec React pour le frontend, Express pour le backend, packagée avec **Docker** et déployée sur **Kubernetes**. Le système est conçu comme un service unique accessible via une passerelle d'accès (Gateway / Ingress).
+ContactSphere est une application moderne et élégante pour gérer ses contacts, écrite avec React pour le frontend, Express pour le backend, packagée avec Docker et déployée sur Kubernetes. Le système est conçu comme un service unique accessible via une passerelle d'accès (Gateway / Ingress).
 
 ## Architecture du Projet
 
@@ -13,7 +13,7 @@ graph TD
     Service -->|Load Balancing| Pod1[Pod: ContactSphere Replica 1]
     Service -->|Load Balancing| Pod2[Pod: ContactSphere Replica 2]
     
-    subgraph Pod [Environnement Node.js + Express]
+    subgraph Pod [Environnement Bun + Express]
         Pod1
         Pod2
     end
@@ -23,11 +23,11 @@ graph TD
 
 Pour exécuter et tester ce projet sur macOS, vous aurez besoin de :
 
-1. **Node.js** (v18+) et npm.
-2. **Docker** (Docker Desktop ou Colima).
-3. **Homebrew** (gestionnaire de paquets pour macOS).
-4. **Minikube** (pour exécuter un cluster Kubernetes localement).
-5. **kubectl** (l'outil CLI pour interagir avec le cluster).
+1. Bun
+2. Docker (Docker Desktop ou Colima).
+3. Homebrew (gestionnaire de paquets pour macOS).
+4. Minikube (pour exécuter un cluster Kubernetes localement).
+5. kubectl (l'outil CLI pour interagir avec le cluster).
 
 ### Installation des outils via Homebrew
 
@@ -45,34 +45,30 @@ brew install minikube
 
 L'application utilise un serveur Express pour l'API backend et un serveur Vite pour l'application React.
 
-### Installation des dépendances (Racine + Frontend)
+### Installation des dépendances
 ```bash
-npm run install:all
+bun run install:all
 ```
 
 ### Lancement en mode développement
-Pour développer localement avec un rechargement à chaud (Hot Module Replacement) :
 
-1. **Lancer le serveur backend** (écoute sur le port `3000`) :
+1. Lancer le serveur backend :
    ```bash
-   npm run dev:backend
+   bun run dev:backend
    ```
 
-2. **Lancer le serveur frontend Vite** (dans un autre terminal, écoute sur le port `5173`) :
+2. Lancer le serveur frontend :
    ```bash
-   npm run dev:frontend
+   bun run dev:frontend
    ```
    *Note : Le serveur Vite est configuré pour rediriger automatiquement les requêtes `/api/*` vers le backend Express.*
-
-Accédez ensuite à : **[http://localhost:5173](http://localhost:5173)**.
 
 ### Build de production local
 Pour compiler le frontend et le backend en un ensemble prêt à l'emploi :
 ```bash
-npm run build
-npm start
+bun run build
+bun start
 ```
-Le serveur Express assemblé écoutera sur le port `3000` et servira les fichiers statiques de React depuis le dossier `frontend/dist`.
 
 ## Création de l'image Docker
 
@@ -121,65 +117,65 @@ Pour rendre l'application accessible depuis l'extérieur du cluster via une gate
 
 Minikube intègre un contrôleur Ingress NGINX facile à activer.
 
-1. **Activer l'addon Ingress dans Minikube** :
+1. Activer l'addon Ingress dans Minikube :
    ```bash
    minikube addons enable ingress
    ```
 
-2. **Appliquer la configuration de l'Ingress** :
+2. Appliquer la configuration de l'Ingress :
    ```bash
    kubectl apply -f k8s/ingress.yaml
    ```
 
-3. **Lancer le tunnel Minikube** (nécessaire sur macOS pour acheminer le trafic réseau vers le cluster) :
+3. Lancer le tunnel Minikube (nécessaire sur macOS pour acheminer le trafic réseau vers le cluster) :
    ```bash
    minikube tunnel
    ```
    *(Gardez ce terminal ouvert)*.
 
-4. **Accéder à l'application** :
+4. Accéder à l'application :
    Ouvrez votre navigateur et accédez à l'adresse de votre passerelle locale :
    ```bash
    # Récupérer l'adresse IP de l'ingress
    kubectl get ingress
    ```
-   Sur macOS avec minikube tunnel, l'Ingress sera accessible sur **[http://localhost](http://localhost)** ou via l'adresse IP affichée par la commande précédente.
+   Sur macOS avec minikube tunnel, l'Ingress sera accessible sur [http://localhost](http://localhost) ou via l'adresse IP affichée par la commande précédente.
 
 ### Option B : Utilisation de Kubernetes Gateway API (Standard Moderne)
 
-Si votre cluster utilise la nouvelle spécification **Gateway API** (avec un contrôleur comme Envoy Gateway, Kong, ou Cilium) :
+Si votre cluster utilise la nouvelle spécification Gateway API (avec un contrôleur comme Envoy Gateway, Kong, ou Cilium) :
 
-1. **Appliquer la Gateway et la HTTPRoute** :
+1. Appliquer la Gateway et la HTTPRoute :
    ```bash
    kubectl apply -f k8s/gateway.yaml
    ```
 
-2. **Vérifier le statut de la Gateway** :
+2. Vérifier le statut de la Gateway :
    ```bash
    kubectl get gateway
    ```
 
-3. **Accéder à l'application** :
+3. Accéder à l'application :
    Récupérez l'adresse IP externe de la Gateway et accédez-y dans votre navigateur.
 
 ## Commandes de Diagnostic et de Test
 
 Voici quelques commandes utiles pour déboguer ou observer le déploiement :
 
-* **Vérifier l'état de santé du service** :
+* Vérifier l'état de santé du service :
   ```bash
   kubectl get svc contact-manager-svc
   ```
-* **Consulter les logs en temps réel** :
+* Consulter les logs en temps réel :
   ```bash
   kubectl logs -l app=contact-manager -f
   ```
-* **Simuler une panne (redémarrage des pods)** :
+* Simuler une panne (redémarrage des pods) :
   ```bash
   kubectl rollout restart deployment contact-manager
   ```
-* **Accéder au service directement sans Ingress (Port-Forward)** :
+* Accéder au service directement sans Ingress (Port-Forward) :
   ```bash
   kubectl port-forward svc/contact-manager-svc 8080:80
   ```
-  Accédez ensuite à **[http://localhost:8080](http://localhost:8080)**.
+  Accédez ensuite à [http://localhost:8080](http://localhost:8080).
