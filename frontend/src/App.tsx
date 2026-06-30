@@ -200,33 +200,30 @@ export default function App() {
   );
 
   return (
-    <div className="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col gap-8">
+    <div className="w-full max-w-7xl mx-auto px-4 py-8 flex flex-col gap-8">
       {/* Header Area */}
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 bg-brand-glass backdrop-blur-md border border-border-glass rounded-2xl shadow-2xl gap-4">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6  border  rounded-2xl  gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-500 p-3 rounded-xl text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]">
+          <div className="p-3 rounded-xl">
             <Users size={24} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-indigo-100 bg-clip-text text-transparent">
-              Contact
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                Sphere
-              </span>
+            <h1 className="text-xl">
+              ContactSphere
             </h1>
-            <p className="text-xs text-[#9ca3af]">Propulsé par React + Tailwind v4</p>
+            <p className="text-xs">Propulsé par React + Tailwind v4</p>
           </div>
         </div>
 
         <div className="flex items-center gap-6 self-stretch sm:self-auto justify-between">
           <div className="flex flex-col items-end">
-            <span className="text-[10px] uppercase text-[#9ca3af] tracking-wider">
+            <span className="text-[10px] uppercase tracking-wider">
               Total Contacts
             </span>
-            <span className="text-2xl font-bold text-white">{contacts.length}</span>
+            <span className="text-2xl font-bold ">{contacts.length}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-semibold text-emerald-400">
-            <span className="w-2 height-2 rounded-full bg-emerald-400 animate-pulse-green"></span>
+            <span className="w-2 height-2 rounded-full bg-emerald-400"></span>
             K8s Service Active
           </div>
         </div>
@@ -235,21 +232,21 @@ export default function App() {
       {/* Main Grid */}
       <main className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 items-start">
         {/* Form Card */}
-        <section className="bg-brand-glass backdrop-blur-lg border border-border-glass rounded-2xl p-6 shadow-2xl">
-          <h2 className="text-lg font-bold text-white mb-1">
+        <section className="backdrop-blur-lg border  rounded-2xl p-6">
+          <h2 className="text-lg font-bold  mb-1">
             {editingId ? "Modifier le Contact" : "Créer un Contact"}
           </h2>
-          <p className="text-xs text-[#9ca3af] mb-6">
+          <p className="text-xs  mb-6">
             Renseignez les détails du contact ci-dessous.
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-name" className="text-xs font-semibold text-[#9ca3af]">
+              <label htmlFor="contact-name" className="text-xs font-semibold ">
                 Nom complet *
               </label>
               <div className="relative flex items-center">
-                <User size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
+                <User size={16} className="absolute left-3.5  pointer-events-none" />
                 <input
                   type="text"
                   id="contact-name"
@@ -257,17 +254,17 @@ export default function App() {
                   onChange={handleInputChange}
                   placeholder="ex. Jean Dupont"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
+                  className="input"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-email" className="text-xs font-semibold text-[#9ca3af]">
+              <label htmlFor="contact-email" className="text-xs font-semibold ">
                 Adresse e-mail *
               </label>
               <div className="relative flex items-center">
-                <Mail size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
+                <Mail size={16} className="absolute left-3.5  pointer-events-none" />
                 <input
                   type="email"
                   id="contact-email"
@@ -275,17 +272,17 @@ export default function App() {
                   onChange={handleInputChange}
                   placeholder="ex. jean.dupont@company.com"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
+                  className="input"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-phone" className="text-xs font-semibold text-[#9ca3af]">
+              <label htmlFor="contact-phone" className="text-xs font-semibold ">
                 Téléphone *
               </label>
               <div className="relative flex items-center">
-                <Phone size={16} className="absolute left-3.5 text-[#6b7280] pointer-events-none" />
+                <Phone size={16} className="absolute left-3.5  pointer-events-none" />
                 <input
                   type="tel"
                   id="contact-phone"
@@ -293,19 +290,19 @@ export default function App() {
                   onChange={handleInputChange}
                   placeholder="ex. +33 6 12 34 56 78"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
+                  className="input"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-company" className="text-xs font-semibold text-[#9ca3af]">
+              <label htmlFor="contact-company" className="text-xs font-semibold ">
                 Entreprise
               </label>
               <div className="relative flex items-center">
                 <Briefcase
                   size={16}
-                  className="absolute left-3.5 text-[#6b7280] pointer-events-none"
+                  className="absolute left-3.5  pointer-events-none"
                 />
                 <input
                   type="text"
@@ -313,27 +310,23 @@ export default function App() {
                   value={formData.company}
                   onChange={handleInputChange}
                   placeholder="ex. Acme Corp"
-                  className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
+                  className="input"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-notes" className="text-xs font-semibold text-[#9ca3af]">
+              <label htmlFor="contact-notes" className="text-xs font-semibold ">
                 Notes / Observations
               </label>
               <div className="relative flex items-start">
-                <FileText
-                  size={16}
-                  className="absolute left-3.5 top-3 text-[#6b7280] pointer-events-none"
-                />
                 <textarea
                   id="contact-notes"
                   value={formData.notes}
                   onChange={handleInputChange}
                   rows={3}
                   placeholder="Notes supplémentaires sur ce contact..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/30 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300 resize-y"
+                  className="textarea"
                 />
               </div>
             </div>
@@ -341,7 +334,7 @@ export default function App() {
             <div className="flex gap-3 mt-4">
               <button
                 type="submit"
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/45"
+                className="btn"
               >
                 {editingId ? "Mettre à jour" : "Enregistrer"}
               </button>
@@ -349,7 +342,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex items-center justify-center p-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-300"
+                  className="btn"
                 >
                   <X size={18} />
                 </button>
@@ -361,30 +354,30 @@ export default function App() {
         {/* List Section */}
         <section className="flex flex-col gap-6">
           {/* Search Bar */}
-          <div className="bg-brand-glass backdrop-blur-md border border-border-glass rounded-2xl p-4 shadow-2xl">
+          <div className="  border  rounded-2xl p-4">
             <div className="relative flex items-center">
-              <Search size={18} className="absolute left-4 text-[#6b7280]" />
+              <Search size={18} className="absolute left-4 " />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher un contact par son nom, e-mail ou entreprise..."
-                className="w-full pl-11 pr-4 py-2.5 bg-black/15 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500 focus:bg-black/20 focus:ring-3 focus:ring-indigo-500/20 transition-all duration-300"
+                className="input"
               />
             </div>
           </div>
 
           {/* Grid display */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-brand-glass border border-border-glass rounded-2xl text-[#9ca3af]">
-              <Loader2 size={40} className="animate-spin text-indigo-500 mb-4" />
+            <div className="flex flex-col items-center justify-center py-20  border  rounded-2xl ">
+              <Loader2 size={40} className="animate-spin mb-4" />
               <p>Chargement des contacts...</p>
             </div>
           ) : filteredContacts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 px-4 bg-brand-glass border border-border-glass rounded-2xl text-[#9ca3af] text-center">
+            <div className="flex flex-col items-center justify-center py-20 px-4 border  rounded-2xl  text-center">
               <Users size={64} className="opacity-30 mb-4 stroke-1" />
-              <h3 className="text-white text-base font-semibold mb-1">Aucun contact trouvé</h3>
-              <p className="text-sm text-[#9ca3af] max-w-sm">
+              <h3 className=" text-base font-semibold mb-1">Aucun contact trouvé</h3>
+              <p className="text-sm  max-w-sm">
                 Commencez à ajouter des contacts à l'aide du formulaire ou ajustez votre recherche.
               </p>
             </div>
@@ -397,17 +390,17 @@ export default function App() {
                 return (
                   <div
                     key={contact.id}
-                    className="group bg-brand-glass backdrop-blur-md border border-border-glass rounded-2xl p-5 flex flex-col gap-4 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-white/15 transition-all duration-300 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-gradient-to-b before:from-indigo-500 before:to-purple-500 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300"
+                    className="group border  rounded-2xl p-5 flex flex-col gap-4 hover:-translate-y-1    relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:opacity-0 hover:before:opacity-100 before: before:"
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg text-white shadow-md bg-gradient-to-br ${gradient}`}
+                        className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${gradient}`}
                       >
                         {initials}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3
-                          className="font-semibold text-white truncate text-sm"
+                          className="font-semibold  truncate text-sm"
                           title={contact.name}
                         >
                           {contact.name}
@@ -420,35 +413,35 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 pt-3 border-t border-white/5 text-xs">
-                      <div className="flex items-center gap-2 text-[#9ca3af] min-w-0">
-                        <Mail size={12} className="text-[#6b7280] shrink-0" />
+                    <div className="flex flex-col gap-2 pt-3 border-t  text-xs">
+                      <div className="flex items-center gap-2  min-w-0">
+                        <Mail size={12} className=" shrink-0" />
                         <span className="truncate" title={contact.email}>
                           {contact.email}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[#9ca3af] min-w-0">
-                        <Phone size={12} className="text-[#6b7280] shrink-0" />
+                      <div className="flex items-center gap-2  min-w-0">
+                        <Phone size={12} className=" shrink-0" />
                         <span>{contact.phone}</span>
                       </div>
                       {contact.notes && (
-                        <div className="mt-1 bg-black/15 py-2 px-3 rounded-lg border-l border-white/10 text-[11px] text-[#9ca3af] italic">
+                        <div className="mt-1 py-2 px-3 rounded-lg border-l  text-[11px]  italic">
                           {contact.notes}
                         </div>
                       )}
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-3 mt-auto border-t border-white/5">
+                    <div className="flex justify-end gap-2 pt-3 mt-auto border-t ">
                       <button
                         onClick={() => handleEdit(contact)}
-                        className="p-1.5 rounded-lg text-[#6b7280] hover:text-indigo-400 hover:bg-white/5 transition-all duration-300 cursor-pointer"
+                        className="btn"
                         title="Modifier"
                       >
                         <Edit3 size={14} />
                       </button>
                       <button
                         onClick={() => handleDelete(contact.id)}
-                        className="p-1.5 rounded-lg text-[#6b7280] hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 cursor-pointer"
+                        className="btn"
                         title="Supprimer"
                       >
                         <Trash2 size={14} />
@@ -467,11 +460,10 @@ export default function App() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`flex items-center gap-3 px-4 py-3 bg-[#111827] text-white rounded-xl shadow-2xl border border-white/10 text-sm animate-slide-in ${
-              toast.type === "success"
-                ? "border-l-4 border-l-emerald-500"
-                : "border-l-4 border-l-red-500"
-            }`}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm animate-slide-in ${toast.type === "success"
+              ? "border-l-4 border-l-emerald-500"
+              : "border-l-4 border-l-red-500"
+              }`}
           >
             {toast.type === "success" ? (
               <CheckCircle2 size={18} className="text-emerald-400" />
