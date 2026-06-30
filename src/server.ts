@@ -1,5 +1,6 @@
-import express, { Request, Response } from "express";
-import path from "path";
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 
 interface Contact {
   id: string;
@@ -11,11 +12,8 @@ interface Contact {
   createdAt: string;
 }
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+const app = new Hono();
+const PORT = Number(process.env.PORT) || 3000;
 
 // In-memory database of contacts
 let contacts: Contact[] = [
@@ -43,15 +41,22 @@ let contacts: Contact[] = [
 const generateId = (): string => Math.random().toString(36).substring(2, 9);
 
 // API Endpoints
-app.get("/api/contacts", (req: Request, res: Response) => {
-  res.json(contacts);
+app.get("/api/contacts", (c) => {
+  return c.json(contacts);
 });
 
-app.post("/api/contacts", (req: Request, res: Response) => {
-  const { name, email, phone, company, notes } = req.body;
+app.post("/api/contacts", async (c) => {
+  let body;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: "Invalid JSON body" }, 400);
+  }
+
+  const { name, email, phone, company, notes } = body;
 
   if (!name || !email || !phone) {
-    return res.status(400).json({ error: "Name, email, and phone are required" });
+    return c.json({ error: "Name, email, and phone are required" }, 400);
   }
 
   const newContact: Contact = {
@@ -65,21 +70,28 @@ app.post("/api/contacts", (req: Request, res: Response) => {
   };
 
   contacts.push(newContact);
-  res.status(201).json(newContact);
+  return c.json(newContact, 201);
 });
 
-app.put("/api/contacts/:id", (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { name, email, phone, company, notes } = req.body;
+app.put("/api/contacts/:id", async (c) => {
+  const id = c.req.param("id");
+  let body;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: "Invalid JSON body" }, 400);
+  }
+
+  const { name, email, phone, company, notes } = body;
 
   const contactIndex = contacts.findIndex((c) => c.id === id);
 
   if (contactIndex === -1) {
-    return res.status(404).json({ error: "Contact not found" });
+    return c.json({ error: "Contact not found" }, 404);
   }
 
   if (!name || !email || !phone) {
-    return res.status(400).json({ error: "Name, email, and phone are required" });
+    return c.json({ error: "Name, email, and phone are required" }, 400);
   }
 
   contacts[contactIndex] = {
@@ -91,31 +103,39 @@ app.put("/api/contacts/:id", (req: Request, res: Response) => {
     notes: notes || "",
   };
 
-  res.json(contacts[contactIndex]);
+  return c.json(contacts[contactIndex]);
 });
 
-app.delete("/api/contacts/:id", (req: Request, res: Response) => {
-  const { id } = req.params;
+app.delete("/api/contacts/:id", (c) => {
+  const id = c.req.param("id");
   const contactIndex = contacts.findIndex((c) => c.id === id);
 
   if (contactIndex === -1) {
-    return res.status(404).json({ error: "Contact not found" });
+    return c.json({ error: "Contact not found" }, 404);
   }
 
   contacts = contacts.filter((c) => c.id !== id);
-  res.status(204).send();
+  return new Response(null, { status: 204 });
 });
 
 // Health check endpoint for Kubernetes probes
-app.get("/healthz", (req: Request, res: Response) => {
-  res.status(200).json({ status: "UP", timestamp: new Date().toISOString() });
+app.get("/healthz", (c) => {
+  return c.json({ status: "UP", timestamp: new Date().toISOString() });
 });
 
-// Fallback to serving the index.html for spa
-app.get("*", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
+// Serve frontend static files
+app.use("/*", serveStatic({
+  root: "./frontend/dist",
+}));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Fallback to index.html for SPA client-side routing
+app.get("*", serveStatic({
+  path: "./frontend/dist/index.html",
+}));
+
+serve({
+  fetch: app.fetch,
+  port: PORT,
+}, (info) => {
+  console.log(`Server running on port ${info.port}`);
 });

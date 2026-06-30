@@ -4,11 +4,11 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy root and frontend package files
-COPY package*.json tsconfig.json ./
-COPY frontend/package*.json ./frontend/
+COPY package.json tsconfig.json ./
+COPY frontend/package.json ./frontend/
 
 # Install dependencies for both backend and frontend
-RUN npm ci
+RUN npm install
 RUN npm --prefix frontend install
 
 # Copy all source files
@@ -21,6 +21,9 @@ RUN npx tsc
 # Build frontend (Vite)
 RUN npm --prefix frontend run build
 
+# Prune devDependencies to keep production image small
+RUN npm prune --omit=dev
+
 # Stage 2: Production Runtime
 FROM node:20-alpine AS runner
 
@@ -30,12 +33,10 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # Copy package files
-COPY package*.json ./
+COPY package.json ./
 
-# Install only production dependencies for the backend
-RUN npm ci --only=production
-
-# Copy compiled files and static assets from builder stage
+# Copy node_modules and compiled/built files from builder stage
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/frontend/dist ./frontend/dist
 
