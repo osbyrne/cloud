@@ -5,7 +5,6 @@ import {
   Mail,
   Phone,
   Briefcase,
-  FileText,
   Search,
   X,
   Trash2,
